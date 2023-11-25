@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const options: NextAuthOptions = {
@@ -8,18 +9,22 @@ export const options: NextAuthOptions = {
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID as string,
+      clientSecret: process.env.GOOGLE_SECRET as string,
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
         username: {
           label: "Username:",
           type: "text",
-          placeholder: "your username",
+          placeholder: "Your username",
         },
         password: {
           label: "Pasword:",
           type: "password",
-          placeholder: "use a strong password",
+          placeholder: "Use a strong password",
         },
       },
       async authorize(credentials) {
