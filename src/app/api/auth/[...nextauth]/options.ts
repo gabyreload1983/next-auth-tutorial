@@ -16,10 +16,10 @@ export const options: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: {
-          label: "Username:",
-          type: "text",
-          placeholder: "Your username",
+        email: {
+          label: "Email:",
+          type: "email",
+          placeholder: "Your email",
         },
         password: {
           label: "Pasword:",
@@ -31,16 +31,21 @@ export const options: NextAuthOptions = {
         // This is where you need to retrieve user data
         // to verify with credentials
         // Docs: https://next-auth.js.org/configuration/providers/credentials
-        const user = { id: "42", name: "Lisa", password: "123" };
 
-        if (
-          credentials?.username === user.name &&
-          credentials?.password === user.password
-        ) {
+        const res = await fetch("http://localhost:3400/api/users/login", {
+          method: "POST",
+          body: JSON.stringify(credentials),
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await res.json();
+
+        if (res.ok && data.status === "success") {
+          const { user } = data.payload;
+          user.name = `${user.first_name} ${user.last_name}`;
           return user;
-        } else {
-          return null;
         }
+
+        return null;
       },
     }),
   ],
